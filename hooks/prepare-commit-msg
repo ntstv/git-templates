@@ -1,0 +1,12 @@
+#!/bin/sh
+#Something like refs/heads/myBranchName
+#Get text behind the last / of the branch path
+#Filtered task name
+#Check that this is not an amend by checking that the first line is empty
+branchPath=$(git symbolic-ref -q HEAD)
+branchName=${branchPath##*/}
+taskName=$(expr match "$branchName" '\(^[A-Z]\+-[0-9]\+\)')
+hasFirstLine=$(head -n1 $1)
+if [ -z "$hasFirstLine" ] ; then
+    sed -i "1s/^/$taskName: /" $1
+fi
